@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Антон Никольский](https://up.htmlacademy.ru/javascript/15/user/228985).
-* Наставник: `Неизвестно`.
+* Наставник: `Михаил Новиков`.
 
 ---
 
