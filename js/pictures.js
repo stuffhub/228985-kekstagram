@@ -4,7 +4,6 @@
   var AMOUNT_OF_PHOTOS = 25;
   var MIN_AMOUNT_LIKES = 15;
   var MAX_AMOUNT_LIKES = 200;
-  var AVATAR_RATIO = 35;
   var RANDOM_COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.'];
   var RANDOM_DESCRIPTION = [
     'Тестим новую камеру!',
@@ -93,19 +92,18 @@
     bigPicture.querySelector('.social__caption').textContent =
       element.description;
   };
-
   var fragmentPictures = document.createDocumentFragment();
   var fragmentComments = document.createDocumentFragment();
   var containerPictures = document.querySelector('.pictures');
   var containerComments = document.querySelector('.social__comments');
-  for (var i = 0; i < AMOUNT_OF_PHOTOS; i++) {
-    if (i === 0) {
-      fillOverlay(listPhotos[i]);
-      for (var j = 0; j < 2; j++) {
-        fragmentComments.appendChild(makeComment(listPhotos[j]));
+  for (var j = 0; j < AMOUNT_OF_PHOTOS; j++) {
+    if (j === 0) {
+      fillOverlay(listPhotos[j]);
+      for (var k = 0; k < 2; k++) {
+        fragmentComments.appendChild(makeComment(listPhotos[k]));
       }
     }
-    fragmentPictures.appendChild(renderElement(listPhotos[i]));
+    fragmentPictures.appendChild(renderElement(listPhotos[j]));
   }
   containerComments.appendChild(fragmentComments);
   containerPictures.appendChild(fragmentPictures);
