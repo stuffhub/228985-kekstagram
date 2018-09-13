@@ -1,10 +1,18 @@
 'use strict';
 
 (function () {
+  var AMOUNT_OF_STRINGS = 2;
   var AMOUNT_OF_PHOTOS = 25;
   var MIN_AMOUNT_LIKES = 15;
   var MAX_AMOUNT_LIKES = 200;
-  var RANDOM_COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.'];
+  var RANDOM_COMMENTS = [
+    'Всё отлично!',
+    'В целом всё неплохо. Но не всё.',
+    'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+    'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+    'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+    'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+  ];
   var RANDOM_DESCRIPTION = [
     'Тестим новую камеру!',
     'Затусили с друзьями на море',
@@ -14,32 +22,42 @@
     'Вот это тачка!'
   ];
 
-  var listPhotos = [];
-
-  var getRandomAmount = function (min, max) {
-    if (max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    } else {
-      return Math.round(Math.random() * min);
-    }
+  var getRandomValue = function (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  for (var i = 1; i <= AMOUNT_OF_PHOTOS; i++) {
-    listPhotos.push({
-      url: 'photos/' + i + '.jpg',
-      likes: getRandomAmount(MIN_AMOUNT_LIKES, MAX_AMOUNT_LIKES),
-      getComments: function () {
-        var randomComment = [];
-        randomComment.push(
-            RANDOM_COMMENTS[getRandomAmount(RANDOM_COMMENTS.length - 1)]
-        );
-        return randomComment;
-      },
-      description:
-        RANDOM_DESCRIPTION[getRandomAmount(RANDOM_DESCRIPTION.length - 1)]
-    });
-  }
+  var getPhotos = function () {
+    var arrayPhotos = [];
+    for (var i = 1; i <= AMOUNT_OF_PHOTOS; i++) {
+      arrayPhotos.push({
+        url: 'photos/' + i + '.jpg',
+        likes: getRandomValue(MIN_AMOUNT_LIKES, MAX_AMOUNT_LIKES),
+        getComments: function () {
+          var randomComment = '';
+          for (var j = 0; j < AMOUNT_OF_STRINGS; j++) {
+            var randomList = RANDOM_COMMENTS[
+              getRandomValue(0, RANDOM_COMMENTS.length - 1)
+            ].split(' ');
+            var randomWord =
+              randomList[getRandomValue(0, randomList.length - 1)];
+            if (j <= 0) {
+              randomComment +=
+                randomWord.charAt(0).toUpperCase() + randomWord.substr(1) + ' ';
+            } else {
+              randomComment +=
+                randomWord.charAt(0).toLowerCase() + randomWord.substr(1) + ' ';
+            }
+          }
+          return randomComment;
+        },
+        description:
+          RANDOM_DESCRIPTION[getRandomValue(0, RANDOM_DESCRIPTION.length - 1)]
+      });
+    }
+    return arrayPhotos;
+  };
 
+  var listPhotos = getPhotos();
   var templatePicture = document
     .querySelector('#picture')
     .content.querySelector('.picture');
@@ -66,7 +84,7 @@
   var makeComment = function (element) {
     var comment = makeElement('li', 'social__comment');
     var commentAvatar = makeElement('img', 'social__picture');
-    commentAvatar.src = 'img/avatar-' + getRandomAmount(1, 6) + '.svg';
+    commentAvatar.src = 'img/avatar-' + getRandomValue(1, 6) + '.svg';
     commentAvatar.alt = 'Аватар комментатора фотографии';
     commentAvatar.width = '35';
     commentAvatar.height = '35';
@@ -96,14 +114,14 @@
   var fragmentComments = document.createDocumentFragment();
   var containerPictures = document.querySelector('.pictures');
   var containerComments = document.querySelector('.social__comments');
-  for (var j = 0; j < AMOUNT_OF_PHOTOS; j++) {
-    if (j === 0) {
-      fillOverlay(listPhotos[j]);
-      for (var k = 0; k < 2; k++) {
-        fragmentComments.appendChild(makeComment(listPhotos[k]));
+  for (var k = 0; k < AMOUNT_OF_PHOTOS; k++) {
+    if (k === 0) {
+      fillOverlay(listPhotos[k]);
+      for (var l = 0; l < 2; l++) {
+        fragmentComments.appendChild(makeComment(listPhotos[l]));
       }
     }
-    fragmentPictures.appendChild(renderElement(listPhotos[j]));
+    fragmentPictures.appendChild(renderElement(listPhotos[k]));
   }
   containerComments.appendChild(fragmentComments);
   containerPictures.appendChild(fragmentPictures);
