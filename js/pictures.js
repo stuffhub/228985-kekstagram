@@ -33,8 +33,12 @@
 
   var getComments = function () {
     var arrayRandomComments = [];
-    for (var i = 0; i < getRandomNumber(2, 1); i++) {
-      arrayRandomComments.push(getRandomArrayValue(RANDOM_COMMENTS));
+    for (var i = 0; i < getRandomNumber(5, 1); i++) {
+      var arrayRandomString = [];
+      for (var j = 0; j < getRandomNumber(2, 1); j++) {
+        arrayRandomString[j] = getRandomArrayValue(RANDOM_COMMENTS);
+      }
+      arrayRandomComments.push(arrayRandomString.join(' '));
     }
     return arrayRandomComments;
   };
@@ -52,12 +56,13 @@
     return arrayPhotos;
   };
 
-  var renderElement = function (element) {
+  var renderElement = function (objectPhoto) {
     var pictureElement = templatePicture.cloneNode(true);
-    pictureElement.querySelector('.picture__img').src = element.url;
-    pictureElement.querySelector('.picture__likes').textContent = element.likes;
+    pictureElement.querySelector('.picture__img').src = objectPhoto.url;
+    pictureElement.querySelector('.picture__likes').textContent =
+      objectPhoto.likes;
     pictureElement.querySelector('.picture__comments').textContent =
-      element.comments.length;
+      objectPhoto.comments.length;
     return pictureElement;
   };
 
@@ -70,7 +75,7 @@
     return element;
   };
 
-  var makeComment = function (element) {
+  var makeComment = function (commentText) {
     var comment = makeElement('li', 'social__comment');
     var commentAvatar = makeElement('img', 'social__picture');
     commentAvatar.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
@@ -78,11 +83,7 @@
     commentAvatar.width = AVATAR_SIZE;
     commentAvatar.height = AVATAR_SIZE;
     comment.appendChild(commentAvatar);
-    var commentText = makeElement(
-        'p',
-        'social__text',
-        element.comments.join(' ')
-    );
+    var commentText = makeElement('p', 'social__text', commentText);
     comment.appendChild(commentText);
     return comment;
   };
@@ -96,10 +97,10 @@
       element.description;
   };
 
-  var createFragmentComment = function () {
+  var createFragmentComment = function (objectPhoto) {
     var fragmentComments = document.createDocumentFragment();
-    for (var i = 0; i <= getRandomNumber(5, 1); i++) {
-      fragmentComments.appendChild(makeComment(listPhotos[i]));
+    for (var i = 0; i < objectPhoto.comments.length; i++) {
+      fragmentComments.appendChild(makeComment(objectPhoto.comments[i]));
     }
     return fragmentComments;
   };
@@ -129,6 +130,6 @@
   var containerComments = document.querySelector('.social__comments');
 
   fillOverlay(listPhotos[0]);
-  containerComments.appendChild(createFragmentComment());
+  containerComments.appendChild(createFragmentComment(listPhotos[0]));
   containerPictures.appendChild(createFragmentPicture());
 })();
