@@ -75,7 +75,7 @@
     return element;
   };
 
-  var makeComment = function (commentText) {
+  var makeComment = function (commentString) {
     var comment = makeElement('li', 'social__comment');
     var commentAvatar = makeElement('img', 'social__picture');
     commentAvatar.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
@@ -83,7 +83,7 @@
     commentAvatar.width = AVATAR_SIZE;
     commentAvatar.height = AVATAR_SIZE;
     comment.appendChild(commentAvatar);
-    var commentText = makeElement('p', 'social__text', commentText);
+    var commentText = makeElement('p', 'social__text', commentString);
     comment.appendChild(commentText);
     return comment;
   };
