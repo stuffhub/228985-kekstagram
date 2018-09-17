@@ -201,8 +201,9 @@
   var filterCheckHandler = function (input) {
     input.addEventListener('click', function () {
       imagePreview.className = '';
-      var currentSelectedFilter = filterList[this.id];
+      var currentSelectedFilter = filterList[input.id];
       imagePreview.classList.add(currentSelectedFilter);
+      log(this);
     });
   };
 
@@ -220,8 +221,8 @@
     'effect-heat': 'effects__preview--heat'
   };
 
-  for (var i = 0; i < filterMode.length; i++) {
-    filterCheckHandler(filterMode[i]);
+  for (var j = 0; j < filterMode.length; j++) {
+    filterCheckHandler(filterMode[j]);
   }
 
   uploadFile.addEventListener('change', fileUploadHandler);
