@@ -203,7 +203,6 @@
       imagePreview.className = '';
       var currentSelectedFilter = filterList[input.id];
       imagePreview.classList.add(currentSelectedFilter);
-      log(this);
     });
   };
 
