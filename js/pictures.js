@@ -198,10 +198,12 @@
     }
   };
 
-  var filterCheckHandler = function () {
-    imagePreview.className = '';
-    var currentSelectedFilter = filterList[this.id];
-    imagePreview.classList.add(currentSelectedFilter);
+  var filterCheckHandler = function (input) {
+    input.addEventListener('click', function () {
+      imagePreview.className = '';
+      var currentSelectedFilter = filterList[this.id];
+      imagePreview.classList.add(currentSelectedFilter);
+    });
   };
 
   var uploadFile = containerPictures.querySelector('#upload-file');
@@ -209,7 +211,6 @@
   var closeFilterOverlay = filterOverlay.querySelector('#upload-cancel');
   var imagePreview = filterOverlay.querySelector('.img-upload__preview img');
   var filterMode = filterOverlay.querySelectorAll('.effects__radio');
-  var filterSlider = filterOverlay.querySelector('.effect-level__pin');
   var filterList = {
     'effect-none': 'effects__preview--none',
     'effect-chrome': 'effects__preview--chrome',
@@ -220,7 +221,7 @@
   };
 
   for (var i = 0; i < filterMode.length; i++) {
-    filterMode[i].addEventListener('click', filterCheckHandler);
+    filterCheckHandler(filterMode[i]);
   }
 
   uploadFile.addEventListener('change', fileUploadHandler);
