@@ -4,6 +4,7 @@
   var AMOUNT_OF_PHOTOS = 25;
   var MIN_AMOUNT_LIKES = 15;
   var MAX_AMOUNT_LIKES = 200;
+  var ESC_KEY = 27;
   var AVATAR_SIZE = '35';
   var RANDOM_COMMENTS = [
     'Всё отлично!',
@@ -113,6 +114,45 @@
     return fragmentPictures;
   };
 
+  var showOverlay = function (element, listener) {
+    element.classList.remove('hidden');
+    document.addEventListener('keydown', listener);
+  };
+
+  var hideOverlay = function (element, listener, clearElementValue) {
+    element.classList.add('hidden');
+    document.removeEventListener('keydown', listener);
+    if (clearElementValue) {
+      clearElementValue.value = '';
+    }
+  };
+
+  var pictureHideHandler = function () {
+    hideOverlay(bigPicture, pictureHideEscHandler);
+  };
+
+  var pictureHideEscHandler = function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      hideOverlay(bigPicture, pictureHideEscHandler);
+    }
+  };
+
+  var removeCommentsOverlay = function () {
+    while (containerComments.firstChild) {
+      containerComments.removeChild(containerComments.firstChild);
+    }
+  };
+
+  var renderPicture = function (picture, index) {
+    picture.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      removeCommentsOverlay();
+      showOverlay(bigPicture, pictureHideEscHandler);
+      fillOverlay(listPhotos[index]);
+      containerComments.appendChild(createFragmentComment(listPhotos[index]));
+    });
+  };
+
   var listPhotos = getPhotos();
 
   var templatePicture = document
@@ -120,7 +160,10 @@
     .content.querySelector('.picture');
 
   var bigPicture = document.querySelector('.big-picture');
-  bigPicture.classList.remove('hidden');
+  var closeBigPicture = bigPicture.querySelector('.big-picture__cancel');
+
+  closeBigPicture.addEventListener('click', pictureHideHandler);
+
   bigPicture
     .querySelector('.social__comment-count')
     .classList.add('visually-hidden');
@@ -129,7 +172,55 @@
   var containerPictures = document.querySelector('.pictures');
   var containerComments = document.querySelector('.social__comments');
 
-  fillOverlay(listPhotos[0]);
-  containerComments.appendChild(createFragmentComment(listPhotos[0]));
   containerPictures.appendChild(createFragmentPicture());
+
+  var listPictures = containerPictures.querySelectorAll('.picture');
+
+  for (var i = 0; i < listPictures.length; i++) {
+    var picture = listPictures[i];
+    renderPicture(picture, i);
+  }
+
+  var fileUploadHandler = function () {
+    showOverlay(filterOverlay, filterHideEscHandler);
+  };
+
+  var filteHideHandler = function () {
+    hideOverlay(filterOverlay, filterHideEscHandler, uploadFile);
+  };
+
+  var filterHideEscHandler = function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      hideOverlay(filterOverlay, filterHideEscHandler, uploadFile);
+    }
+  };
+
+  var filterCheckHandler = function (input) {
+    input.addEventListener('click', function () {
+      imagePreview.className = '';
+      var currentSelectedFilter = filterList[input.id];
+      imagePreview.classList.add(currentSelectedFilter);
+    });
+  };
+
+  var uploadFile = containerPictures.querySelector('#upload-file');
+  var filterOverlay = containerPictures.querySelector('.img-upload__overlay');
+  var closeFilterOverlay = filterOverlay.querySelector('#upload-cancel');
+  var imagePreview = filterOverlay.querySelector('.img-upload__preview img');
+  var filterMode = filterOverlay.querySelectorAll('.effects__radio');
+  var filterList = {
+    'effect-none': 'effects__preview--none',
+    'effect-chrome': 'effects__preview--chrome',
+    'effect-sepia': 'effects__preview--sepia',
+    'effect-marvin': 'effects__preview--marvin',
+    'effect-phobos': 'effects__preview--phobos',
+    'effect-heat': 'effects__preview--heat'
+  };
+
+  for (i = 0; i < filterMode.length; i++) {
+    filterCheckHandler(filterMode[i]);
+  }
+
+  uploadFile.addEventListener('change', fileUploadHandler);
+  closeFilterOverlay.addEventListener('click', filteHideHandler);
 })();
