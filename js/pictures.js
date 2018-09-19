@@ -4,6 +4,7 @@
   var AMOUNT_OF_PHOTOS = 25;
   var MIN_AMOUNT_LIKES = 15;
   var MAX_AMOUNT_LIKES = 200;
+  var ESC_KEY = 27;
   var AVATAR_SIZE = '35';
   var RANDOM_COMMENTS = [
     'Всё отлично!',
@@ -113,14 +114,14 @@
     return fragmentPictures;
   };
 
-  var showOverlay = function (element, addListener) {
+  var showOverlay = function (element, listener) {
     element.classList.remove('hidden');
-    document.addEventListener('keydown', addListener);
+    document.addEventListener('keydown', listener);
   };
 
-  var hideOverlay = function (element, removeListener, clearElementValue) {
+  var hideOverlay = function (element, listener, clearElementValue) {
     element.classList.add('hidden');
-    document.removeEventListener('keydown', removeListener);
+    document.removeEventListener('keydown', listener);
     if (clearElementValue) {
       clearElementValue.value = '';
     }
@@ -180,10 +181,6 @@
     renderPicture(picture, i);
   }
 
-  // module4
-
-  var ESC_KEY = 27;
-
   var fileUploadHandler = function () {
     showOverlay(filterOverlay, filterHideEscHandler);
   };
@@ -220,8 +217,8 @@
     'effect-heat': 'effects__preview--heat'
   };
 
-  for (var j = 0; j < filterMode.length; j++) {
-    filterCheckHandler(filterMode[j]);
+  for (i = 0; i < filterMode.length; i++) {
+    filterCheckHandler(filterMode[i]);
   }
 
   uploadFile.addEventListener('change', fileUploadHandler);
