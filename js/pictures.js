@@ -248,25 +248,29 @@
   };
   var isOnlyHash = function (value) {
     var hashTags = value.split(' ');
+    var flag;
     for (i = 0; i < hashTags.length; i++) {
       if (hashTags[i] === '#') {
-        return true;
+        flag = true;
       } else {
-        return false;
+        flag = false;
       }
     }
+    return flag;
   };
   var isUnique = function (value) {
     var hashTags = value.split(' ');
+    var flag;
     for (i = 0; i < hashTags.length - 1; i++) {
       for (var j = i + 1; j < hashTags.length; j++) {
         if (hashTags[i] === hashTags[j]) {
-          return true;
+          flag = true;
         } else {
-          return false;
+          flag = false;
         }
       }
     }
+    return flag;
   };
   var isExceedAmount = function (value) {
     var hashTags = value.split(' ');
@@ -274,13 +278,15 @@
   };
   var isExceedAmountLetter = function (value) {
     var hashTags = value.split(' ');
+    var flag;
     for (i = 0; i < hashTags.length; i++) {
       if (hashTags[i].length > MAX_AMOUNT_LETTERS_HASHTAGS) {
-        return true;
+        flag = true;
       } else {
-        return false;
+        flag = false;
       }
     }
+    return flag;
   };
   var inputHashtagValidation = function (input, inputValue) {
     if (isMissHashList(inputValue)) {
