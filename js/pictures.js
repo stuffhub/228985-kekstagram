@@ -236,13 +236,15 @@
   };
   var isMissHashList = function (value) {
     var hashTags = value.split(' ');
+    var flag;
     for (i = 0; i < hashTags.length; i++) {
       if (isMissHash(hashTags[i])) {
-        return true;
+        flag = true;
       } else {
-        return false;
+        flag = false;
       }
     }
+    return flag;
   };
   var isOnlyHash = function (value) {
     var hashTags = value.split(' ');
