@@ -236,26 +236,32 @@
   };
   var isMissHashList = function (value) {
     var hashTags = value.split(' ');
-    for (var i = 0; i < hashTags.length; i++) {
+    for (i = 0; i < hashTags.length; i++) {
       if (isMissHash(hashTags[i])) {
         return true;
+      } else {
+        return false;
       }
     }
   };
   var isOnlyHash = function (value) {
     var hashTags = value.split(' ');
-    for (var i = 0; i < hashTags.length; i++) {
+    for (i = 0; i < hashTags.length; i++) {
       if (hashTags[i] === '#') {
         return true;
+      } else {
+        return false;
       }
     }
   };
   var isUnique = function (value) {
     var hashTags = value.split(' ');
-    for (var i = 0; i < hashTags.length - 1; i++) {
+    for (i = 0; i < hashTags.length - 1; i++) {
       for (var j = i + 1; j < hashTags.length; j++) {
         if (hashTags[i] === hashTags[j]) {
           return true;
+        } else {
+          return false;
         }
       }
     }
@@ -266,9 +272,11 @@
   };
   var isExceedAmountLetter = function (value) {
     var hashTags = value.split(' ');
-    for (var i = 0; i < hashTags.length; i++) {
+    for (i = 0; i < hashTags.length; i++) {
       if (hashTags[i].length > MAX_AMOUNT_LETTERS_HASHTAGS) {
         return true;
+      } else {
+        return false;
       }
     }
   };
