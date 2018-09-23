@@ -235,89 +235,84 @@
     return value.match(reg) ? true : false;
   };
   var isMissHashList = function (value) {
-    var hashTags = value.split(' ');
-    var flag;
-    for (i = 0; i < hashTags.length; i++) {
-      if (isMissHash(hashTags[i])) {
-        flag = true;
-      } else {
-        flag = false;
+    for (i = 0; i < value.length; i++) {
+      if (isMissHash(value[i])) {
+        return true;
       }
     }
-    return flag;
+    return false;
+  };
+  var isOnlySpace = function (value) {
+    for (i = 0; i < value.length; i++) {
+      if (!value[i]) {
+        return true;
+      }
+    }
+    return false;
   };
   var isOnlyHash = function (value) {
-    var hashTags = value.split(' ');
-    var flag;
-    for (i = 0; i < hashTags.length; i++) {
-      if (hashTags[i] === '#') {
-        flag = true;
-      } else {
-        flag = false;
+    for (i = 0; i < value.length; i++) {
+      if (value[i] === '#') {
+        return true;
       }
     }
-    return flag;
+    return false;
   };
   var isUnique = function (value) {
-    var hashTags = value.split(' ');
-    var flag;
-    for (i = 0; i < hashTags.length - 1; i++) {
-      for (var j = i + 1; j < hashTags.length; j++) {
-        if (hashTags[i] === hashTags[j]) {
-          flag = true;
-        } else {
-          flag = false;
+    for (i = 0; i < value.length - 1; i++) {
+      for (var j = i + 1; j < value.length; j++) {
+        if (value[i] === value[j]) {
+          return true;
         }
       }
     }
-    return flag;
+    return false;
   };
   var isExceedAmount = function (value) {
-    var hashTags = value.split(' ');
-    return hashTags.length > MAX_AMOUNT_HASHTAGS ? true : false;
+    return value.length > MAX_AMOUNT_HASHTAGS ? true : false;
   };
   var isExceedAmountLetter = function (value) {
-    var hashTags = value.split(' ');
-    var flag;
-    for (i = 0; i < hashTags.length; i++) {
-      if (hashTags[i].length > MAX_AMOUNT_LETTERS_HASHTAGS) {
-        flag = true;
-      } else {
-        flag = false;
+    for (i = 0; i < value.length; i++) {
+      if (value[i].length > MAX_AMOUNT_LETTERS_HASHTAGS) {
+        return true;
       }
     }
-    return flag;
+    return false;
   };
-  var inputHashtagValidation = function (input, inputValue) {
-    if (isMissHashList(inputValue)) {
-      input.setCustomValidity('Хэш-тег начинается с символа # (решётка)');
-    } else if (isMissSpace(inputValue)) {
-      input.setCustomValidity('Хэш-теги разделяются пробелами');
-    } else if (isOnlyHash(inputValue)) {
-      input.setCustomValidity(
-          'Хэш-тег не может состоять только из одной решётки'
-      );
-    } else if (isUnique(inputValue)) {
-      input.setCustomValidity(
-          'Один и тот же хэш-тег не может быть использован дважды'
-      );
-    } else if (isExceedAmount(inputValue)) {
-      input.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
-    } else if (isExceedAmountLetter(inputValue)) {
-      input.setCustomValidity(
+  var inputHashtagValidation = function (inputValue) {
+    var mismatches = [];
+    if (isMissSpace(inputValue)) {
+      mismatches.push('Хэш-теги разделяются пробелами');
+    }
+    if (isOnlySpace(inputValue.split(' '))) {
+      mismatches.push('Хэш-тег не может состоять только из пробела');
+    }
+    if (isMissHashList(inputValue.split(' '))) {
+      mismatches.push('Хэш-тег начинается с символа # (решётка)');
+    }
+    if (isOnlyHash(inputValue.split(' '))) {
+      mismatches.push('Хэш-тег не может состоять только из одной решётки');
+    }
+    if (isUnique(inputValue.split(' '))) {
+      mismatches.push('Один и тот же хэш-тег не может быть использован дважды');
+    }
+    if (isExceedAmount(inputValue.split(' '))) {
+      mismatches.push('Нельзя указать больше пяти хэш-тегов');
+    }
+    if (isExceedAmountLetter(inputValue.split(' '))) {
+      mismatches.push(
           'Максимальная длина одного хэш-тега 20 символов включая решётку'
       );
-    } else {
-      input.setCustomValidity('');
     }
+    return mismatches;
   };
 
   var inputChangeHandler = function (evt) {
     var input = evt.target;
     var inputValue = input.value.toLowerCase();
-    if (inputValue.length > 0) {
+    if (inputHashtagValidation.length > 0) {
       input.required = true;
-      inputHashtagValidation(input, inputValue);
+      input.setCustomValidity(inputHashtagValidation(inputValue).join(', '));
     } else {
       input.setCustomValidity('');
       input.required = false;
