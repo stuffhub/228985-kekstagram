@@ -242,14 +242,6 @@
     }
     return false;
   };
-  var isOnlySpace = function (value) {
-    for (i = 0; i < value.length; i++) {
-      if (!value[i]) {
-        return true;
-      }
-    }
-    return false;
-  };
   var isOnlyHash = function (value) {
     for (i = 0; i < value.length; i++) {
       if (value[i] === '#') {
@@ -281,25 +273,26 @@
   };
   var inputHashtagValidation = function (inputValue) {
     var mismatches = [];
+    var hashTags = inputValue.split(' ');
+    var filteredHashTags = hashTags.filter(function (hashTag) {
+      return hashTag.length > 0;
+    });
     if (isMissSpace(inputValue)) {
       mismatches.push('Хэш-теги разделяются пробелами');
     }
-    if (isOnlySpace(inputValue.split(' '))) {
-      mismatches.push('Хэш-тег не может состоять только из пробела');
-    }
-    if (isMissHashList(inputValue.split(' '))) {
+    if (isMissHashList(filteredHashTags)) {
       mismatches.push('Хэш-тег начинается с символа # (решётка)');
     }
-    if (isOnlyHash(inputValue.split(' '))) {
+    if (isOnlyHash(filteredHashTags)) {
       mismatches.push('Хэш-тег не может состоять только из одной решётки');
     }
-    if (isUnique(inputValue.split(' '))) {
+    if (isUnique(filteredHashTags)) {
       mismatches.push('Один и тот же хэш-тег не может быть использован дважды');
     }
-    if (isExceedAmount(inputValue.split(' '))) {
+    if (isExceedAmount(filteredHashTags)) {
       mismatches.push('Нельзя указать больше пяти хэш-тегов');
     }
-    if (isExceedAmountLetter(inputValue.split(' '))) {
+    if (isExceedAmountLetter(filteredHashTags)) {
       mismatches.push(
           'Максимальная длина одного хэш-тега 20 символов включая решётку'
       );
@@ -310,7 +303,7 @@
   var inputChangeHandler = function (evt) {
     var input = evt.target;
     var inputValue = input.value.toLowerCase();
-    if (inputHashtagValidation.length > 0) {
+    if (inputHashtagValidation(inputValue).length > 0) {
       input.required = true;
       input.setCustomValidity(inputHashtagValidation(inputValue).join(', '));
     } else {
