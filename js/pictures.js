@@ -370,7 +370,7 @@
     return ((max - min) * value) / 100 + min;
   };
 
-  var pinPush = function (evt) {
+  var pinPush = function () {
     var sliderCoords = getCoords(slider);
     var pinMoveHandler = function (moveEvt) {
       var sliderLeftPoint = moveEvt.clientX - sliderCoords.left;
