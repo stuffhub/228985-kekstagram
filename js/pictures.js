@@ -185,6 +185,7 @@
 
   var fileUploadHandler = function () {
     showOverlay(filterOverlay, filterHideEscHandler);
+    changeSaturation(100);
   };
 
   var filteHideHandler = function () {
@@ -197,11 +198,46 @@
     }
   };
 
+  var changeSaturation = function (value) {
+    var filterName = imagePreview.getAttribute('class');
+    sliderPin.style.left = sliderDepthLine.style.width = value + '%';
+    if (filterName === filterList['effect-none']) {
+      imagePreview.style.filter = 'none';
+    }
+    if (filterName === filterList['effect-chrome']) {
+      imagePreview.style.filter =
+        'grayscale(' + getProportion(1, 0, value) + ')';
+    }
+    if (filterName === filterList['effect-sepia']) {
+      imagePreview.style.filter = 'sepia(' + getProportion(1, 0, value) + ')';
+    }
+    if (filterName === filterList['effect-marvin']) {
+      imagePreview.style.filter =
+        'invert(' + getProportion(100, 0, value) + '%)';
+    }
+    if (filterName === filterList['effect-phobos']) {
+      imagePreview.style.filter = 'blur(' + getProportion(3, 0, value) + 'px)';
+    }
+    if (filterName === filterList['effect-heat']) {
+      imagePreview.style.filter =
+        'brightness(' + getProportion(3, 1, value) + ')';
+    }
+  };
+
   var filterCheckHandler = function (input) {
-    input.addEventListener('click', function () {
+    var currentFilterName = filterList[input.id];
+    if (input.checked) {
+      imagePreview.classList.add(currentFilterName);
+    }
+    input.addEventListener('click', function (evt) {
       imagePreview.className = '';
-      var currentSelectedFilter = filterList[input.id];
-      imagePreview.classList.add(currentSelectedFilter);
+      if (currentFilterName === 'effects__preview--none') {
+        filterEffectLevel.style.display = 'none';
+      } else {
+        filterEffectLevel.style.display = 'block';
+      }
+      imagePreview.classList.add(currentFilterName);
+      changeSaturation(100);
     });
   };
 
@@ -321,4 +357,52 @@
   inputHashtag.addEventListener('blur', function () {
     document.addEventListener('keydown', filterHideEscHandler);
   });
+
+  // slider
+  var getCoords = function (element) {
+    var elementCoords = element.getBoundingClientRect();
+    return {
+      left: elementCoords.left
+    };
+  };
+
+  var getProportion = function (max, min, value) {
+    return ((max - min) * value) / 100 + min;
+  };
+
+  var pinPush = function (evt) {
+    var pin = evt.target;
+    var pinCoords = getCoords(pin);
+    var sliderCoords = getCoords(slider);
+    var pinMoveHandler = function (moveEvt) {
+      var sliderLeftPoint = moveEvt.clientX - sliderCoords.left;
+      var sliderRightPoint = slider.offsetWidth;
+      if (sliderLeftPoint < 0) {
+        sliderLeftPoint = 0;
+      }
+      if (sliderLeftPoint > sliderRightPoint) {
+        sliderLeftPoint = sliderRightPoint;
+      }
+      var effectValue = Math.round(
+          (sliderLeftPoint / slider.offsetWidth) * 100
+      );
+      filterEffectValue.value = effectValue;
+      changeSaturation(filterEffectValue.value);
+    };
+    var pinUpHandler = function (upEvt) {
+      document.removeEventListener('mousemove', pinMoveHandler);
+      document.removeEventListener('mouseup', pinUpHandler);
+    };
+    document.addEventListener('mousemove', pinMoveHandler);
+    document.addEventListener('mouseup', pinUpHandler);
+  };
+
+  var filterEffectLevel = filterOverlay.querySelector('.effect-level');
+  var filterEffectValue = filterEffectLevel.querySelector(
+      '.effect-level__value'
+  );
+  var slider = filterEffectLevel.querySelector('.effect-level__line');
+  var sliderPin = filterEffectLevel.querySelector('.effect-level__pin');
+  var sliderDepthLine = filterEffectLevel.querySelector('.effect-level__depth');
+  sliderPin.addEventListener('mousedown', pinPush);
 })();
