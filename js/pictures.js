@@ -229,7 +229,7 @@
     if (input.checked) {
       imagePreview.classList.add(currentFilterName);
     }
-    input.addEventListener('click', function (evt) {
+    input.addEventListener('click', function () {
       imagePreview.className = '';
       if (currentFilterName === 'effects__preview--none') {
         filterEffectLevel.style.display = 'none';
@@ -371,8 +371,6 @@
   };
 
   var pinPush = function (evt) {
-    var pin = evt.target;
-    var pinCoords = getCoords(pin);
     var sliderCoords = getCoords(slider);
     var pinMoveHandler = function (moveEvt) {
       var sliderLeftPoint = moveEvt.clientX - sliderCoords.left;
@@ -389,7 +387,7 @@
       filterEffectValue.value = effectValue;
       changeSaturation(filterEffectValue.value);
     };
-    var pinUpHandler = function (upEvt) {
+    var pinUpHandler = function () {
       document.removeEventListener('mousemove', pinMoveHandler);
       document.removeEventListener('mouseup', pinUpHandler);
     };
