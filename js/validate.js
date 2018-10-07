@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var isMissHash = function (value) {
     return value[0] !== '#' ? true : false;
   };
@@ -87,20 +86,153 @@
     var inputValue = input.value.toLowerCase();
     if (inputHashtagValidation(inputValue).length > 0) {
       input.required = true;
+      input.style.border = '2px solid #F00';
       input.setCustomValidity(inputHashtagValidation(inputValue).join(', '));
     } else {
       input.setCustomValidity('');
+      input.style.border = 'none';
       input.required = false;
     }
   };
 
-  var inputHashtag = window.pictures.uploadForm.querySelector('.text__hashtags');
+  var textAreaChangeHandler = function (evt) {
+    var textArea = evt.target;
+    if (textArea.value.length > 0) {
+      textArea.required = true;
+      if (
+        textArea.value.length > window.constants.MAX_AMOUNT_LETTERS_DESCRIPTION
+      ) {
+        textArea.style.border = '2px solid #F00';
+        textArea.setCustomValidity(
+            'Длина комментария не может составлять больше 140 символов'
+        );
+      } else {
+        textArea.setCustomValidity('');
+        textArea.style.border = 'none';
+      }
+    } else {
+      textArea.required = false;
+    }
+  };
+
+  var mainContainer = document.body.querySelector('main');
+
+  var hideErrorMessageHandler = function (evt) {
+    window.utility.hideOverlay(formResponseError, hideSuccessMessageEscHandler);
+  };
+
+  var hideErrorMessageEscHandler = function (evt) {
+    if (evt.keyCode === window.constants.ESC_KEY) {
+      window.utility.hideOverlay(
+          formResponseError,
+          hideSuccessMessageEscHandler
+      );
+    }
+  };
+
+  var hideSuccessMessageHandler = function (evt) {
+    window.utility.hideOverlay(
+        formResponseSuccess,
+        hideSuccessMessageEscHandler
+    );
+  };
+
+  var hideSuccessMessageEscHandler = function (evt) {
+    if (evt.keyCode === window.constants.ESC_KEY) {
+      window.utility.hideOverlay(
+          formResponseSuccess,
+          hideSuccessMessageEscHandler
+      );
+    }
+  };
+
+  var createFormResponseOverlay = function (
+      templateName,
+      templateButtonName,
+      templateButtonHandler
+  ) {
+    var templateMessage = document
+      .querySelector('#' + templateName)
+      .content.querySelector('.' + templateName);
+    var message = templateMessage.cloneNode(true);
+    var messageButton = message.querySelector('.' + templateButtonName);
+    message.classList.add('hidden');
+    messageButton.addEventListener('click', templateButtonHandler);
+    return message;
+  };
+
+  var formResponseSuccess = createFormResponseOverlay(
+      'success',
+      'success__button',
+      hideSuccessMessageHandler
+  );
+  var formResponseError = createFormResponseOverlay(
+      'error',
+      'error__button',
+      hideErrorMessageHandler
+  );
+
+  var sendFormResponse = function () {
+    window.pictures.filterHide();
+    mainContainer.appendChild(formResponseSuccess);
+    window.utility.showOverlay(
+        formResponseSuccess,
+        hideSuccessMessageEscHandler
+    );
+  };
+
+  var sendFormError = function () {
+    window.utility.hideOverlay(
+        window.filter.filterOverlay,
+        window.pictures.filterHideEscHandler,
+        window.pictures.uploadFile
+    );
+    mainContainer.appendChild(formResponseError);
+    window.utility.showOverlay(formResponseError, hideErrorMessageEscHandler);
+  };
+
+  var sendFormHandler = function (evt) {
+    window.backend.saveData(
+        new FormData(window.pictures.uploadForm),
+        sendFormResponse,
+        sendFormError
+    );
+    evt.preventDefault();
+  };
+
+  var inputHashtag = window.pictures.uploadForm.querySelector(
+      '.text__hashtags'
+  );
 
   inputHashtag.addEventListener('change', inputChangeHandler);
+
   inputHashtag.addEventListener('focus', function () {
-    document.removeEventListener('keydown', window.pictures.filterHideEscHandler);
+    window.utility.removeListener(
+        'keydown',
+        window.pictures.filterHideEscHandler
+    );
   });
+
   inputHashtag.addEventListener('blur', function () {
-    document.addEventListener('keydown', window.pictures.filterHideEscHandler);
+    window.utility.addListener('keydown', window.pictures.filterHideEscHandler);
   });
+
+  var textAreaDescription = window.pictures.uploadForm.querySelector(
+      '.text__description'
+  );
+
+  textAreaDescription.addEventListener('change', textAreaChangeHandler);
+
+  textAreaDescription.addEventListener('focus', function () {
+    window.utility.removeListener(
+        'keydown',
+        window.pictures.filterHideEscHandler
+    );
+  });
+
+  textAreaDescription.addEventListener('blur', function () {
+    window.utility.addListener('keydown', window.pictures.filterHideEscHandler);
+  });
+
+  window.pictures.uploadForm.addEventListener('submit', sendFormHandler);
 })();

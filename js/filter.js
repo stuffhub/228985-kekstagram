@@ -96,13 +96,14 @@
 
   var closeFilterOverlay = filterOverlay.querySelector('#upload-cancel');
 
-  closeFilterOverlay.addEventListener('click', window.pictures.filteHideHandler);
+  closeFilterOverlay.addEventListener('click', window.pictures.filterHide);
 
   sliderPin.addEventListener('mousedown', pinPush);
 
   window.filter = {
     changeSaturation: changeSaturation,
-    filterOverlay: filterOverlay
+    filterOverlay: filterOverlay,
+    imagePreview: imagePreview
   };
 
 })();

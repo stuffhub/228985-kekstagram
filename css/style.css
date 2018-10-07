@@ -46,10 +46,6 @@ main {
           box-sizing: content-box;
 }
 
-.hidden {
-  display: none;
-}
-
 .visually-hidden {
   position: absolute;
 
@@ -1402,6 +1398,9 @@ main {
           transform: translateX(-50%);
 }
 
+.hidden {
+  display: none;
+}
 
 /* Адаптивности чуток
    ========================================================================== */
