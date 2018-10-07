@@ -117,7 +117,7 @@
 
   var mainContainer = document.body.querySelector('main');
 
-  var hideErrorMessageHandler = function (evt) {
+  var hideErrorMessageHandler = function () {
     window.utility.hideOverlay(formResponseError, hideSuccessMessageEscHandler);
   };
 
@@ -130,7 +130,7 @@
     }
   };
 
-  var hideSuccessMessageHandler = function (evt) {
+  var hideSuccessMessageHandler = function () {
     window.utility.hideOverlay(
         formResponseSuccess,
         hideSuccessMessageEscHandler

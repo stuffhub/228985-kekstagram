@@ -26,8 +26,8 @@
   };
 
   var removeCommentsOverlay = function () {
-    while (this.containerComments.firstChild) {
-      this.containerComments.removeChild(this.containerComments.firstChild);
+    while (containerComments.firstChild) {
+      containerComments.removeChild(containerComments.firstChild);
     }
   };
 
