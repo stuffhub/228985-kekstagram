@@ -19,10 +19,12 @@
     },
     showOverlay: function (element, listener) {
       element.classList.remove('hidden');
+      document.body.classList.add('modal-open');
       document.addEventListener('keydown', listener);
     },
     hideOverlay: function (element, listener, clearElementValue) {
       element.classList.add('hidden');
+      document.body.removeAttribute('class');
       document.removeEventListener('keydown', listener);
       if (clearElementValue) {
         clearElementValue.value = '';
@@ -36,6 +38,12 @@
     },
     getProportion: function (max, min, value) {
       return ((max - min) * value) / 100 + min;
+    },
+    removeListener: function (onEvent, listener) {
+      document.removeEventListener(onEvent, listener);
+    },
+    addListener: function (onEvent, listener) {
+      document.addEventListener(onEvent, listener);
     },
   };
 })();
