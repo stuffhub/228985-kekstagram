@@ -19,7 +19,7 @@
     var fragmentComments = document.createDocumentFragment();
     var comments = objectPhoto.comments.slice(0, window.constants.MAX_AMOUNT_COMMENTS);
     for (var i = 0; i < comments.length; i++) {
-        fragmentComments.appendChild(makeComment(comments[i]));
+      fragmentComments.appendChild(makeComment(comments[i]));
     }
     return fragmentComments;
   };
