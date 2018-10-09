@@ -19,7 +19,7 @@
     var fragmentComments = document.createDocumentFragment();
     for (var i = 0; i < objectPhoto.comments.length; i++) {
       if (i < window.constants.MAX_AMOUNT_COMMENTS) {
-        fragmentComments.appendChild(makeComment(window.utility.getRandomArrayValue(objectPhoto.comments)));
+        fragmentComments.appendChild(makeComment(objectPhoto.comments[i]));
       }
     }
     return fragmentComments;
